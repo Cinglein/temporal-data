@@ -1,0 +1,9 @@
+CREATE TABLE txs (
+	id bigserial NOT NULL PRIMARY KEY,
+	feepayer TEXT NOT NULL,
+	signature TEXT NOT NULL,
+	ts TIMESTAMPTZ NOT NULL,
+	slot BIGINT NOT NULL,
+	fee NUMERIC NOT NULL,
+	profit NUMERIC NOT NULL
+);
