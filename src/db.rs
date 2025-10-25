@@ -3,12 +3,12 @@ use bigdecimal::BigDecimal;
 use chrono::{DateTime, Utc};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
-use sqlx::{Error, FromRow, PgPool, query};
+use sqlx::{query, Error, FromRow, PgPool};
 use std::{
     collections::{HashMap, HashSet},
     sync::Arc,
 };
-use tokio::sync::{Mutex, mpsc};
+use tokio::sync::{mpsc, Mutex};
 
 const BATCH_SIZE: usize = 100;
 
@@ -57,6 +57,7 @@ pub async fn insert_txs(pool: &PgPool, txs: Vec<Tx>) -> Result<(), Error> {
         INSERT INTO txs (feepayer, signature, ts, slot, fee, profit)
         SELECT * 
         FROM UNNEST($1::text[], $2::text[], $3::timestamptz[], $4::bigint[], $5::numeric[], $6::numeric[])
+        ON CONFLICT (signature) DO NOTHING;
         "#,
         &feepayers,
         &signatures,
