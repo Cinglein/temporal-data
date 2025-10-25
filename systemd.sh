@@ -17,8 +17,10 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${server_path}/${service_name}
 WorkingDirectory=${server_path}
+Environment="CARGO_MANIFEST_DIR=${server_path}"
+EnvironmentFile=${server_path}/.env
+ExecStart=${server_path}/${service_name}
 Restart=always
 
 [Install]
